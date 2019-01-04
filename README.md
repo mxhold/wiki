@@ -1,24 +1,20 @@
-# README
+# wiki
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This is a basic wiki application intended for managing personal data.
 
-Things you may want to cover:
+## Prerequisites
 
-* Ruby version
+- Ruby 2.6
+- PostgreSQL 11
 
-* System dependencies
+You can probably use earlier versions of the above dependencies but this project will only be tested using the versions listed.
 
-* Configuration
+## Setup
 
-* Database creation
+For initial setup, run `bin/setup`.
 
-* Database initialization
+To start the server, run `bin/rails s`.
 
-* How to run the test suite
+To run the full test suite, run `bin/rspec spec`.
 
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+To run a specific test, run e.g. `bin/rspec spec/path/to/file_spec.rb:15` to run the test on line 15.
