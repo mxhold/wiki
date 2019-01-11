@@ -29,5 +29,8 @@ module Wiki
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+
+    # Dump schema using SQL to capture Postgres-specific features
+    config.active_record.schema_format = :sql
   end
 end
