@@ -24,3 +24,14 @@ To start the server, run `bin/rails s`.
 To run the full test suite, run `bin/rspec spec`.
 
 To run a specific test, run e.g. `bin/rspec spec/path/to/file_spec.rb:15` to run the test on line 15.
+
+## Database migrations
+
+Some restrictions around migrations I intend to maintain for this project that differ from most Rails applications:
+
+1. Once a migration is run in production, it cannot be changed. This is to prevent the development database from getting out of sync with production.
+2. Each release can contain either database changes or application changes, but not both. See [this post](https://maxwellholder.com/2019/01/09/database-migration-strategies.html#decoupled-releases) for reasoning.
+3. All migrations are irreversible. Since database and application changes are decoupled due to (2) above, if there's an issue with a database migration it should not require an immediate rollback. Instead, you should rollforward with any necessary fixes made in an additional migration. This reduces the complexity of adding new migrations and often many kinds of migrations cannot be rolled back anyway.
+4. Development databases should be built from the `structure.sql` (which has been chosen over the `schema.rb` format since it captures Postgres-specific features) not by running migrations. This avoids the necessity to update older migrations once they are run.
+
+The needs of this application (particularly right now in early development) do not really necessitate this level of discipline but I'm choosing to do this as a kind of experimental practice.
