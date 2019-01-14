@@ -1,0 +1,16 @@
+language: ruby
+rvm:
+  - 2.6
+services:
+  - postgresql
+addons:
+  postgresql: "11.0"
+  apt:
+    packages:
+    - postgresql-11
+    - postgresql-client-11
+env:
+  global:
+  - PGPORT=5433
+before_script:
+  - psql -c 'create database wiki_test;' -U postgres
