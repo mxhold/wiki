@@ -10,3 +10,6 @@ addons:
 before_script:
   - psql -c 'create database wiki_test;' -U postgres
   - bin/rails db:test:prepare
+  # Fetch origin/master for branch dev/pull_request_spec to work on branch builds
+  - git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*" 1>/dev/null
+  - git fetch origin master -q
