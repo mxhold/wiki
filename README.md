@@ -4,10 +4,10 @@ This is a basic wiki application intended for managing personal data.
 
 ## Prerequisites
 
-- Ruby 2.6
-- PostgreSQL 11
+- Ruby 2.5.3
+- PostgreSQL 10
 
-You can probably use earlier versions of the above dependencies but this project will only be tested using the versions listed.
+You can probably use earlier or later versions of the above dependencies but this project will only be tested using the versions listed.
 
 ## Setup
 
