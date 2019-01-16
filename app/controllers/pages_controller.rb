@@ -8,12 +8,14 @@ class PagesController < ApplicationController
   end
 
   def create
-    result = PageCreate.call(title: page_params[:title], content: page_params[:content])
-    @page = result.page
+    result = PageCreate.new(validator: PageValidator).call(title: page_params[:title], content: page_params[:content])
 
     if result.success?
+      @page = result.page
       redirect_to @page, notice: "Page was successfully created."
     else
+      @page = Page.new
+      @errors = result.errors
       render :new
     end
   end
