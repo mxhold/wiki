@@ -1,0 +1,28 @@
+<h2>New page</h2>
+<%= form_with(model: @page, local: true) do |form| %>
+  <% if @page.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@page.errors.count, "error") %> prohibited this page from being saved:</h2>
+
+      <ul>
+      <% @page.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :title %>
+    <%= form.text_field :title %>
+  </div>
+
+  <div class="field">
+    <%= form.label :content, class: "visuallyhidden" %>
+    <%= form.text_area :content, cols: 85, rows: 30 %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "Create" %>
+  </div>
+<% end %>
