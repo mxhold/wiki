@@ -8,13 +8,10 @@ class PagesController < ApplicationController
   end
 
   def create
-    @page = Page.new(
-      title: page_params[:title],
-      content: page_params[:content],
-      slug: page_params[:title].gsub(/ /, '_'),
-    )
+    result = PageCreate.call(title: page_params[:title], content: page_params[:content])
+    @page = result.page
 
-    if @page.save
+    if result.success?
       redirect_to @page, notice: "Page was successfully created."
     else
       render :new
