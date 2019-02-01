@@ -13,7 +13,8 @@ RSpec.feature "Page management" do
     expect(page).to have_content("Page was successfully created.")
     expect(page).to have_content("This is my page")
 
-    visit "/"
+    click_link "Home"
+    expect(page).to have_current_path("/")
     expect(page).to have_link("My Example Page", href: "/My_Example_Page")
   end
 end
