@@ -1,6 +1,6 @@
 class PagesController < ApplicationController
   def home
-    @pages = Page.all
+    @pages = Page.all.order(Arel.sql("lower(title)"))
   end
 
   def new
