@@ -31,4 +31,14 @@ RSpec.describe "page management" do
 
     expect(response.body).to include("<b>Bold is allowed</b> <a href=\"https://google.com\">simple links allowed</a> <a>js link not allowed</a>")
   end
+
+  it "sorts pages alphabetically by title" do
+    Page.create!(title: "aaa", content: "")
+    Page.create!(title: "CCC", content: "")
+    Page.create!(title: "AAA", content: "")
+    Page.create!(title: "BBB", content: "")
+
+    get "/"
+    expect(response.body).to match(/aaa.*AAA.*BBB.*CCC.*/m)
+  end
 end
