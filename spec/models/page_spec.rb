@@ -34,7 +34,7 @@ RSpec.describe Page do
         page.title = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.!~*'() "
         expect(page).to be_valid
 
-        page.title = "slug%"
+        page.title = "slug\n"
         expect(page).not_to be_valid
         expect(page.errors.full_messages_for(:title)).to eql ["Title contains invalid characters"]
       end

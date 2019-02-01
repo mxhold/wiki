@@ -3,7 +3,7 @@ class Page < ApplicationRecord
     presence: true,
     length: { maximum: 1_000 },
     format: {
-      with: /\A[A-Za-z0-9\-_.!~*'() ]*\Z/,
+      with: /\A[A-Za-z0-9\-_.!~*'() ]*\z/,
       message: "contains invalid characters",
     }
   validates :content,
