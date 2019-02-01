@@ -10,13 +10,20 @@
   </head>
 
   <body>
-    <% flash.each do |name, msg| -%>
-      <%= content_tag :div, msg, class: name %>
-    <% end -%>
+    <div class="wrapper">
+      <nav class="mainnav">
+        <ul>
+          <li><%= link_to "Home", root_path %></li>
+          <li><%= link_to "Create a page", new_page_path %></li>
+        </ul>
+      </nav>
+      <main class="content">
+        <% flash.each do |name, msg| -%>
+          <%= content_tag :div, msg, class: name %>
+        <% end -%>
 
-    <nav>
-      <%= link_to "Home", root_path %>
-    </nav>
-    <%= yield %>
+        <%= yield %>
+      </main>
+    </div>
   </body>
 </html>

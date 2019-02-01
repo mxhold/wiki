@@ -30,3 +30,34 @@
   width: 1px !important;
   white-space: nowrap !important;
 }
+
+nav ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+}
+
+.wrapper {
+  display: grid;
+  grid-template-columns: 10em 1fr;
+  grid-column-gap: 0.5em;
+  height: 100vh;
+}
+
+.mainnav {
+  padding-left: 1em;
+  background-color: whitesmoke;
+}
+
+.content {
+  padding: 1em;
+}
+
+.notice {
+  background-color: lemonchiffon;
+  padding: 0.5em;
+  margin: 0.5em 0;
+}
