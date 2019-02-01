@@ -51,4 +51,9 @@ RSpec.describe Page do
       end
     end
   end
+
+  it "computes the slug from the title" do
+    page = Page.new(title: "Hello world")
+    expect(page.slug).to eql("Hello_world")
+  end
 end

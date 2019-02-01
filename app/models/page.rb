@@ -13,4 +13,11 @@ class Page < ApplicationRecord
   def to_param
     slug
   end
+
+  def title=(value)
+    super(value)
+    if value
+      self.slug = value.tr(" ", "_")
+    end
+  end
 end
