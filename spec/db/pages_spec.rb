@@ -82,6 +82,14 @@ RSpec.describe "pages table" do
         insert_into_pages(slug: "A" * 1_001)
       end.to raise_error(PG::CheckViolation, /slug_not_too_long/)
     end
+
+    it "must be unique after converting to lowercase" do
+      insert_into_pages(slug: "MyPage")
+
+      expect do
+        insert_into_pages(slug: "mypage")
+      end.to raise_error(PG::UniqueViolation, /pages_slug_idx/)
+    end
   end
 
   describe "title" do
