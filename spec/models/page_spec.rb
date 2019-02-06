@@ -38,6 +38,13 @@ RSpec.describe Page do
         expect(page).not_to be_valid
         expect(page.errors.full_messages_for(:title)).to eql ["Title contains invalid characters"]
       end
+
+      it "must be unique when converted to slug and downcased" do
+        Page.create!(title: "mypage", content: "")
+        page.title = "MyPage"
+        expect(page).not_to be_valid
+        expect(page.errors.full_messages_for(:title)).to eql ["Title has already been taken"]
+      end
     end
 
     describe "content" do
@@ -52,8 +59,31 @@ RSpec.describe Page do
     end
   end
 
-  it "computes the slug from the title" do
-    page = Page.new(title: "Hello world")
-    expect(page.slug).to eql("Hello_world")
+  describe "slug" do
+    it "is computed from the title" do
+      page = Page.new(title: "Hello world")
+      expect(page.slug).to eql("Hello_world")
+    end
+  end
+
+  describe ".exists_with_slug_ignoring_case?" do
+    it "returns true if page exists that would be found with provided slug" do
+      Page.create!(title: "MyPage", content: "")
+      expect(Page.exists_with_slug_ignoring_case?("MYPAGE")).to eql(true)
+      expect(Page.exists_with_slug_ignoring_case?("notapage")).to eql(false)
+    end
+  end
+
+  describe ".find_by_slug_ignoring_case!" do
+    it "finds the page matching the slug, case insensitive" do
+      page = Page.create(title: "MyPage", content: "")
+      expect(Page.find_by_slug_ignoring_case!("MYPAGE")).to eql(page)
+    end
+
+    it "raises ActiveRecord::RecordNotFound if none found" do
+      expect do
+        Page.find_by_slug_ignoring_case!("foo")
+      end.to raise_error(ActiveRecord::RecordNotFound)
+    end
   end
 end

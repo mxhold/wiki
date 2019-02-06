@@ -25,6 +25,25 @@ RSpec.describe "page management" do
     expect(response.body).to include("error prohibited this page from being saved")
   end
 
+  it "displays an error on application-level uniqueness validation failure" do
+    Page.create!(title: "MyPage", content: "")
+
+    post "/pages", params: { page: { title: "mypage", content: "" }}
+    expect(Page.count).to eql(1)
+    expect(response.body).to include("Title has already been taken")
+  end
+
+  it "displays an error on database uniqueness constraint failure" do
+    Page.create!(title: "MyPage", content: "")
+
+    # simulate race condition by skipping app-level validation
+    expect(Page).to receive(:exists_with_slug_ignoring_case?) { false }
+
+    post "/pages", params: { page: { title: "mypage", content: "" }}
+    expect(Page.count).to eql(1)
+    expect(response.body).to include("Title has already been taken")
+  end
+
   it "sanitizes page content" do
     post "/pages", params: { page: { title: "Title", content: "<b>Bold is allowed</b> <a href='https://google.com'>simple links allowed</a> <a href='javascript:alert(\"hi\");'>js link not allowed</a>" }}
     follow_redirect!
@@ -40,5 +59,13 @@ RSpec.describe "page management" do
 
     get "/"
     expect(response.body).to match(/aa.*AAA.*BBB.*CCC.*/m)
+  end
+
+  it "looks up pages by slug ignoring case" do
+    Page.create!(title: "MyPage", content: "You found it")
+
+    get "/mypage"
+
+    expect(response.body).to include("You found it")
   end
 end

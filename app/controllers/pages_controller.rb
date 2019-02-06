@@ -15,10 +15,17 @@ class PagesController < ApplicationController
     else
       render :new
     end
+  rescue ActiveRecord::RecordNotUnique => e
+    if e.message.match?(/pages_slug_idx/)
+      @page.errors.add(:title, :taken)
+      render :new
+    else
+      raise
+    end
   end
 
   def show
-    @page = Page.find_by!(slug: params[:slug])
+    @page = Page.find_by_slug_ignoring_case!(params[:slug])
   end
 
   private
