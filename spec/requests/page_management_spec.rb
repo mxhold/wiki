@@ -33,12 +33,12 @@ RSpec.describe "page management" do
   end
 
   it "sorts pages alphabetically by title" do
-    Page.create!(title: "aaa", content: "")
+    Page.create!(title: "aa", content: "")
     Page.create!(title: "CCC", content: "")
     Page.create!(title: "AAA", content: "")
     Page.create!(title: "BBB", content: "")
 
     get "/"
-    expect(response.body).to match(/aaa.*AAA.*BBB.*CCC.*/m)
+    expect(response.body).to match(/aa.*AAA.*BBB.*CCC.*/m)
   end
 end

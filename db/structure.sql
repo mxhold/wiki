@@ -103,12 +103,20 @@ ALTER TABLE ONLY public.schema_migrations
 
 
 --
+-- Name: pages_slug_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX pages_slug_idx ON public.pages USING btree (lower(slug));
+
+
+--
 -- PostgreSQL database dump complete
 --
 
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
-('20190104195046');
+('20190104195046'),
+('20190201234142');
 
 
