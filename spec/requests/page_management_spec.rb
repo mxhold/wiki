@@ -69,10 +69,18 @@ RSpec.describe "page management" do
     expect(response.body).to include("You found it")
   end
 
-  it "allows pages that contain dots in the slug" do
+  it "allows pages that contain dots in slug" do
     post "/pages", params: { page: { title: "my.page", content: "You found it" }}
     get "/my.page"
 
     expect(response.body).to include("You found it")
+  end
+
+  it "allows pages that look like they end in file extensions" do
+    post "/pages", params: { page: { title: "_.js", content: "Underscore dot js" }}
+    get "/_.js"
+
+    expect(request.format.to_s).to eql("text/html")
+    expect(response.body).to include("Underscore dot js")
   end
 end
