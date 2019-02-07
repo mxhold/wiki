@@ -4,5 +4,8 @@ Rails.application.routes.draw do
 
   resources :pages, only: [:new, :create]
 
-  get "/:slug", to: "pages#show", as: :page
+  get "/:slug",
+    to: "pages#show",
+    as: :page,
+    constraints: { slug: /[^\/]+/ } # allow dots in slugs
 end

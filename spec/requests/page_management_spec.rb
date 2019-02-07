@@ -68,4 +68,11 @@ RSpec.describe "page management" do
 
     expect(response.body).to include("You found it")
   end
+
+  it "allows pages that contain dots in the slug" do
+    post "/pages", params: { page: { title: "my.page", content: "You found it" }}
+    get "/my.page"
+
+    expect(response.body).to include("You found it")
+  end
 end
