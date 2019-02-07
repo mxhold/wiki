@@ -7,5 +7,6 @@ Rails.application.routes.draw do
   get "/:slug",
     to: "pages#show",
     as: :page,
-    constraints: { slug: /[^\/]+/ } # allow dots in slugs
+    constraints: { slug: /[^\/]+/ }, # allow dots in slugs
+    defaults: { format: 'html' } # ignore what might look like a file extension and always request HTML
 end
