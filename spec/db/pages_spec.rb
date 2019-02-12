@@ -1,29 +1,23 @@
-require 'pg'
-require 'yaml'
-
-RSpec.describe "pages table" do
-  before(:all) do
-    database_configuration = YAML.load_file(File.expand_path("../../config/database.yml", __dir__))["test"]
-
-    @connection = PG.connect(dbname: database_configuration["database"])
-  end
-
-  around(:each) do |example|
-    rollback_transaction = Class.new(StandardError)
-    begin
-      @connection.transaction do
-        example.run
-        raise rollback_transaction
-      end
-    rescue rollback_transaction
-    end
-  end
-
-  def insert_into_pages(content: "content", slug: "slug", title: "title")
+RSpec.describe "pages table", :db_without_rails do
+  def insert_into_pages(
+    content: "content",
+    slug: "slug",
+    title: "title",
+    created_at: Time.now,
+    updated_at: Time.now
+  )
     @connection.exec(
-      "INSERT INTO pages (content, slug, title) VALUES ($1, $2, $3)",
-      [content, slug, title]
+      "INSERT INTO pages (content, slug, title, created_at, updated_at) VALUES ($1, $2, $3, $4, $5)",
+      [content, slug, title, created_at, updated_at]
     )
+  end
+
+  describe "valid row" do
+    it "exists" do
+      expect do
+        insert_into_pages
+      end.not_to raise_error
+    end
   end
 
   describe "content" do
@@ -113,6 +107,36 @@ RSpec.describe "pages table" do
       expect do
         insert_into_pages(title: "A" * 1_001)
       end.to raise_error(PG::CheckViolation, /title_not_too_long/)
+    end
+  end
+
+  describe "created_at" do
+    it "can be null" do
+      expect do
+        insert_into_pages(created_at: nil)
+      end.not_to raise_error
+    end
+
+    it "can't be null" do
+      pending "column added & backfilled"
+      expect do
+        insert_into_pages(created_at: nil)
+      end.to raise_error(PG::NotNullViolation)
+    end
+  end
+
+  describe "updated_at" do
+    it "can be null" do
+      expect do
+        insert_into_pages(updated_at: nil)
+      end.not_to raise_error
+    end
+
+    it "can't be null" do
+      pending "column added & backfilled"
+      expect do
+        insert_into_pages(updated_at: nil)
+      end.to raise_error(PG::NotNullViolation)
     end
   end
 end

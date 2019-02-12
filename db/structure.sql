@@ -25,6 +25,48 @@ CREATE TABLE public.ar_internal_metadata (
 
 
 --
+-- Name: page_revisions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.page_revisions (
+    id integer NOT NULL,
+    content text NOT NULL,
+    slug text NOT NULL,
+    title text NOT NULL,
+    page_id integer NOT NULL,
+    comment text,
+    created_at timestamp with time zone NOT NULL,
+    CONSTRAINT comment_not_too_long CHECK ((char_length(comment) <= 50)),
+    CONSTRAINT content_not_too_long CHECK ((char_length(content) <= 1000000)),
+    CONSTRAINT slug_not_empty CHECK ((slug <> ''::text)),
+    CONSTRAINT slug_not_too_long CHECK ((char_length(slug) <= 1000)),
+    CONSTRAINT slug_uses_uri_unreserved_characters CHECK ((slug ~ '\A[A-Za-z0-9\-_.!~*''()]*\Z'::text)),
+    CONSTRAINT title_not_empty CHECK ((title <> ''::text)),
+    CONSTRAINT title_not_too_long CHECK ((char_length(title) <= 1000))
+);
+
+
+--
+-- Name: page_revisions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.page_revisions_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: page_revisions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.page_revisions_id_seq OWNED BY public.page_revisions.id;
+
+
+--
 -- Name: pages; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -33,6 +75,8 @@ CREATE TABLE public.pages (
     content text NOT NULL,
     slug text NOT NULL,
     title text NOT NULL,
+    created_at timestamp with time zone,
+    updated_at timestamp with time zone,
     CONSTRAINT content_not_too_long CHECK ((char_length(content) <= 1000000)),
     CONSTRAINT slug_not_empty CHECK ((slug <> ''::text)),
     CONSTRAINT slug_not_too_long CHECK ((char_length(slug) <= 1000)),
@@ -72,6 +116,13 @@ CREATE TABLE public.schema_migrations (
 
 
 --
+-- Name: page_revisions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.page_revisions ALTER COLUMN id SET DEFAULT nextval('public.page_revisions_id_seq'::regclass);
+
+
+--
 -- Name: pages id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -84,6 +135,14 @@ ALTER TABLE ONLY public.pages ALTER COLUMN id SET DEFAULT nextval('public.pages_
 
 ALTER TABLE ONLY public.ar_internal_metadata
     ADD CONSTRAINT ar_internal_metadata_pkey PRIMARY KEY (key);
+
+
+--
+-- Name: page_revisions page_revisions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.page_revisions
+    ADD CONSTRAINT page_revisions_pkey PRIMARY KEY (id);
 
 
 --
@@ -110,6 +169,14 @@ CREATE UNIQUE INDEX pages_slug_idx ON public.pages USING btree (lower(slug));
 
 
 --
+-- Name: page_revisions page_revisions_page_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.page_revisions
+    ADD CONSTRAINT page_revisions_page_id_fkey FOREIGN KEY (page_id) REFERENCES public.pages(id);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
@@ -117,6 +184,7 @@ SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20190104195046'),
-('20190201234142');
+('20190201234142'),
+('20190208053352');
 
 
